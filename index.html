@@ -135,7 +135,7 @@
           formData.append("pdfs", files[i]);
         }
 
-        const response = await fetch("/merge", {
+        const response = await fetch("/api/merge", {
           method: "POST",
           body: formData,
         });

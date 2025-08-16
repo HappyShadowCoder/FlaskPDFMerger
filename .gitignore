@@ -32,3 +32,4 @@ ENV/
 *~
 *.bak
 *.swp
+.vercel
