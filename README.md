@@ -1,6 +1,13 @@
 # Flask PDF Merger
 
 A lightweight and user-friendly web application to seamlessly merge multiple PDF files into a single document. This project provides a clean and intuitive interface for PDF consolidation, making it perfect for personal or professional use.
+***
+
+## 🚀 Live Deployment
+
+This Flask PDF Merger is deployed on **Vercel** and accessible publicly. You can use the app directly from your browser.
+
+**Live App URL:** https://pdf-merge-ten.vercel.app/
 
 ***
 
