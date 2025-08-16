@@ -1,0 +1,34 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv/
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Logs
+*.log
+
+# IDEs
+.vscode/
+.idea/
+
+# PDF output (optional if you generate files locally)
+*.pdf
+
+# Backup files
+*~
+*.bak
+*.swp
