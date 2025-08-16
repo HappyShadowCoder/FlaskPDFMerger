@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF Merger</title>
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+  />
+  <script
+    type="text/javascript"
+    src="https://cdn.jsdelivr.net/npm/toastify-js"
+  ></script>
+  <style>
+    /* Body & Background */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+    }
+
+    /* Main Container */
+    .container {
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  width: 400px;
+  max-width: 90%;   /* makes it responsive on smaller screens */
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-sizing: border-box;  /* include padding in width */
+}
+
+    .container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 25px;
+      font-size: 1.8rem;
+    }
+
+    /* File Input */
+    input[type="file"] {
+  display: block;
+  margin: 20px auto;
+  padding: 30px 20px;
+  border: 2px dashed #bbb;
+  border-radius: 12px;
+  width: 100%;        /* full width of container */
+  box-sizing: border-box;  /* include padding/border in width */
+  cursor: pointer;
+  background: #fafafa;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+    input[type="file"]:hover {
+      border-color: #007bff;
+      background: #f0f8ff;
+    }
+
+    /* Merge Button */
+    button {
+      margin-top: 20px;
+      padding: 12px 25px;
+      width: 100%;
+      background: linear-gradient(90deg, #6a11cb, #2575fc);
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    footer {
+      margin-top: 15px;
+      font-size: 12px;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Merge PDFs</h2>
+    <input type="file" id="pdfs" multiple accept="application/pdf" />
+    <button onclick="upload()">Merge</button>
+    <footer>Hold Command (Mac) or Ctrl (Windows) to select multiple files</footer>
+  </div>
+
+  <script>
+    async function upload() {
+      let loadingToast = null;
+      const files = document.getElementById("pdfs").files;
+
+      if (files.length < 2) {
+        Toastify({
+          text: "⚠️ Please select at least two PDFs",
+          duration: 3000,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+        }).showToast();
+        return;
+      }
+
+      loadingToast = Toastify({
+        text: "⏳ Merging PDFs... please wait",
+        duration: -1,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+      });
+      loadingToast.showToast();
+
+      try {
+        const formData = new FormData();
+        for (let i = 0; i < files.length; i++) {
+          formData.append("pdfs", files[i]);
+        }
+
+        const response = await fetch("/merge", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error("Server error while merging");
+        }
+
+        const blob = await response.blob();
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "merged.pdf";
+        link.click();
+
+        loadingToast.hideToast();
+
+        Toastify({
+          text: "✅ Merging completed! Download started.",
+          duration: 3000,
+          gravity: "top",
+          position: "right",
+          backgroundColor: "linear-gradient(to right, #56ab2f, #a8e063)",
+        }).showToast();
+      } catch (error) {
+        loadingToast.hideToast();
+
+        Toastify({
+          text: "❌ " + error.message,
+          duration: 4000,
+          gravity: "top",
+          position: "right",
+          backgroundColor: "linear-gradient(to right, #ff416c, #ff4b2b)",
+        }).showToast();
+      }
+    }
+
+    Toastify.prototype.hideToast = function () {
+      if (this.toastElement) {
+        this.toastElement.remove();
+      }
+    };
+  </script>
+</body>
+</html>
