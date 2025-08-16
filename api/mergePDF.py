@@ -20,7 +20,3 @@ def merge_pdfs():
     output.seek(0)
 
     return send_file(output, as_attachment=True, download_name="merged.pdf")
-
-# Vercel expects this at the bottom
-if __name__ == "__main__":
-    app.run()
