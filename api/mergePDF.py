@@ -1,4 +1,4 @@
-from flask import Flask, request, send_file
+from flask import Flask, request, send_file, render_template
 from PyPDF2 import PdfMerger
 import io
 import os
@@ -8,33 +8,28 @@ app = Flask(
     template_folder=os.path.join(os.path.dirname(__file__), "templates")
 )
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET"])
+def index():
+    # This route serves the index.html file
+    return render_template("index.html")
+
+@app.route("/api/merge", methods=["POST"])
 def merge_pdfs():
-    if request.method == "POST":
-        files = request.files.getlist("pdfs")
-        if len(files) < 2:
-            return "Please upload at least two PDFs", 400
+    # This route handles the POST request from the frontend to merge PDFs
+    files = request.files.getlist("pdfs")
+    if len(files) < 2:
+        return "Please upload at least two PDFs", 400
 
-        merger = PdfMerger()
-        for f in files:
-            merger.append(f.stream)
+    merger = PdfMerger()
+    for f in files:
+        merger.append(f.stream)
 
-        output = io.BytesIO()
-        merger.write(output)
-        merger.close()
-        output.seek(0)
+    output = io.BytesIO()
+    merger.write(output)
+    merger.close()
+    output.seek(0)
 
-        return send_file(output, as_attachment=True, download_name="merged.pdf")
-
-    # GET request: show a simple upload form
-    return '''
-    <h2>Merge PDFs</h2>
-    <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="pdfs" multiple required>
-        <button type="submit">Merge PDFs</button>
-    </form>
-    '''
+    return send_file(output, as_attachment=True, download_name="merged.pdf")
 
 if __name__ == "__main__":
-    # Bind to 0.0.0.0 so Render can route to it
     app.run(host="0.0.0.0", port=5000)
