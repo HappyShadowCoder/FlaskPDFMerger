@@ -15,9 +15,10 @@
       padding: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       background: linear-gradient(135deg, #6a11cb, #2575fc);
     }
 
@@ -31,6 +32,7 @@
       text-align: center;
       transition: transform 0.3s, box-shadow 0.3s;
       box-sizing: border-box;
+      margin-bottom: 20px; /* Space between main container and new footer */
     }
 
     .container:hover {
@@ -86,6 +88,26 @@
       font-size: 12px;
       color: #777;
     }
+
+    .info-footer {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 15px 25px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      color: #fff;
+      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .info-footer a {
+      color: #fff;
+      text-decoration: underline;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -93,10 +115,14 @@
     <h2>Merge PDFs</h2>
     <input type="file" id="pdfs" multiple accept="application/pdf" />
     <button onclick="upload()">Merge</button>
-    <footer>
-      <p>Hold Command (Mac) or Ctrl (Windows) to select multiple files</p>
-      <p>Made by Swastiek Kala</p>
-    </footer>
+    <footer>Hold Command (Mac) or Ctrl (Windows) to select multiple files</footer>
+  </div>
+
+  <div class="info-footer">
+    <p>Made by Swastiek Kala</p>
+    <a href="https://github.com/HappyShadowCoder/FlaskPDFMerger.git" target="_blank">
+      GitHub Repository
+    </a>
   </div>
 
   <script>
