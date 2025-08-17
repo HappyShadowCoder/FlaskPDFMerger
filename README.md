@@ -9,6 +9,13 @@ This Flask PDF Merger is deployed on **Render** and accessible publicly. You can
 
 **Live App URL:** https://pdfmerger-atov.onrender.com
 
+> 🧭 **Heads-up for Brave Browser Users**  
+> Some users have reported that the app doesn't load properly in Brave due to its strict default settings.  
+> While our app doesn't use trackers, Brave's aggressive blocking may interfere with normal functionality.  
+> If you run into issues, try using Chrome, Firefox, or Edge for a smoother experience.
+
+
+
 ***
 
 ### ✨ Features
