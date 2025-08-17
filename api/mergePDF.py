@@ -1,8 +1,12 @@
 from flask import Flask, request, send_file
 from PyPDF2 import PdfMerger
 import io
+import os
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    template_folder=os.path.join(os.path.dirname(__file__), "templates")
+)
 
 @app.route("/", methods=["GET", "POST"])
 def merge_pdfs():
