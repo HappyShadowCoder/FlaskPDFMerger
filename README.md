@@ -5,9 +5,9 @@ A lightweight and user-friendly web application to seamlessly merge multiple PDF
 
 ## 🚀 Live Deployment
 
-This Flask PDF Merger is deployed on **Vercel** and accessible publicly. You can use the app directly from your browser.
+This Flask PDF Merger is deployed on **Render** and accessible publicly. You can use the app directly from your browser.
 
-**Live App URL:** https://pdf-merge-ten.vercel.app/
+**Live App URL:** https://pdfmerger-atov.onrender.com
 
 ***
 
