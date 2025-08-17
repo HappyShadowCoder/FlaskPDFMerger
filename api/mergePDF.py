@@ -4,6 +4,11 @@ import io
 
 app = Flask(__name__)
 
+@app.route('/')
+def home():
+    return 'PDF Merger API is running!'
+
+
 @app.route("/api/merge", methods=["POST"])
 def merge_pdfs():
     files = request.files.getlist("pdfs")
