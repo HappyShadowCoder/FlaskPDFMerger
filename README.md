@@ -92,4 +92,11 @@ Potential improvements for the project include:
 ***
 
 ### 📜 Version
-**v1.0.0** - Initial release with full PDF merging functionality and web interface.
+**v1.0.0** 
+
+Initial release with full PDF merging functionality and web interface.
+
+**v2.0.0**  
+
+Major Security and Reliability Update 🔒
+This version introduces a robust IP address handling fix for reverse proxies and the addition of a dedicated admin check API endpoint to ensure secure and reliable access to administrative features.
