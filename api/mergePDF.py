@@ -5,8 +5,12 @@ from datetime import datetime
 import requests
 import io
 import os
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), "templates"))
+
+# Add ProxyFix to correctly get the client's IP address from the reverse proxy
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1)
 
 client = MongoClient(os.getenv("MONGO_URI"))
 db = client["pdf_merger_app"]
