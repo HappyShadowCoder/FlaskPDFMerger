@@ -17,8 +17,8 @@ admins_collection = db["admins"]
 @app.before_request
 def log_ip_location():
     ip = request.headers.get("X-Forwarded-For", request.remote_addr)
-    if not ip or ip.startswith("127.") or ip == "::1":
-        ip = "UNKNOWN"
+    if ip and "," in ip:
+        ip = ip.split(",")[0].strip()
     try:
         res = requests.get(f"https://ipinfo.io/{ip}?token={os.getenv('IPINFO_TOKEN')}")
         data = res.json()
