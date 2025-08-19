@@ -70,6 +70,15 @@ def merge_pdfs():
     output.seek(0)
     return send_file(output, as_attachment=True, download_name="merged.pdf")
 
+@app.route("/api/check_admin", methods=["GET"])
+def check_admin():
+    ip = request.headers.get("X-Forwarded-For", request.remote_addr)
+    if ip and "," in ip:
+        ip = ip.split(",")[0].strip()
+    admin_user = admins_collection.find_one({"ip": ip})
+    is_admin = admin_user is not None
+    return jsonify({"is_admin": is_admin})
+
 @app.route("/admin/toggle_offline", methods=["POST"])
 def toggle_offline():
     ip = request.headers.get("X-Forwarded-For", request.remote_addr)
