@@ -33,3 +33,8 @@ ENV/
 *.bak
 *.swp
 .vercel
+
+# Local secrets
+config.py
+.env
+
