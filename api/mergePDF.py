@@ -27,17 +27,25 @@ def log_ip_location():
         is_admin = admin_user is not None
 
         log_entry = {
-            "ip": ip,
             "city": data.get("city"),
             "region": data.get("region"),
             "country": data.get("country"),
             "org": data.get("org"),
             "loc": data.get("loc"),
-            "datetime": datetime.utcnow(),
-            "is_admin": is_admin
+            "is_admin": is_admin,
+            "last_seen": datetime.utcnow()
         }
-        visitors_collection.insert_one(log_entry)
-        print("Visitor logged:", log_entry)
+
+        visitors_collection.update_one(
+            {"ip": ip},
+            {
+                "$set": log_entry,               # update location + admin info
+                "$inc": {"visit_count": 1}       # increment visit count
+            },
+            upsert=True
+        )
+
+        print(f"Visitor logged/updated: {ip}")
     except Exception as e:
         print("Could not fetch/store location:", e)
 
