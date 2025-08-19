@@ -6,6 +6,8 @@ import requests
 import io
 import os
 
+
+APP_OFFLINE = False  # Set True to make the app offline
 app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), "templates"))
 
 # Mongo Setup
@@ -13,6 +15,11 @@ client = MongoClient(os.getenv("MONGO_URI"))
 db = client["pdf_merger_app"]
 visitors_collection = db["visitors"]
 admins_collection = db["admins"]
+
+@app.before_request
+def check_offline():
+    if APP_OFFLINE and request.endpoint != "static":
+        return render_template("offline.html")
 
 @app.before_request
 def log_ip_location():
@@ -51,7 +58,10 @@ def log_ip_location():
 
 @app.route("/", methods=["GET"])
 def index():
-    return render_template("index.html")
+    def index():
+        if APP_OFFLINE:
+            return render_template("offline.html")  # Show maintenance page
+        return render_template("index.html")
 
 @app.route("/api/merge", methods=["POST"])
 def merge_pdfs():
