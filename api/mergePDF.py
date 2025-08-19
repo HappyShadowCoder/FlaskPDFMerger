@@ -1,21 +1,52 @@
 from flask import Flask, request, send_file, render_template
 from PyPDF2 import PdfMerger
+from pymongo import MongoClient
+from datetime import datetime
+import requests
 import io
 import os
 
-app = Flask(
-    __name__,
-    template_folder=os.path.join(os.path.dirname(__file__), "templates")
-)
+app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), "templates"))
+
+# Mongo Setup
+client = MongoClient(os.getenv("MONGO_URI"))
+db = client["pdf_merger_app"]
+visitors_collection = db["visitors"]
+admins_collection = db["admins"]
+
+@app.before_request
+def log_ip_location():
+    ip = request.headers.get("X-Forwarded-For", request.remote_addr)
+    if not ip or ip.startswith("127.") or ip == "::1":
+        ip = "UNKNOWN"
+    try:
+        res = requests.get(f"https://ipinfo.io/{ip}?token={os.getenv('IPINFO_TOKEN')}")
+        data = res.json()
+
+        admin_user = admins_collection.find_one({"ip": ip})
+        is_admin = admin_user is not None
+
+        log_entry = {
+            "ip": ip,
+            "city": data.get("city"),
+            "region": data.get("region"),
+            "country": data.get("country"),
+            "org": data.get("org"),
+            "loc": data.get("loc"),
+            "datetime": datetime.utcnow(),
+            "is_admin": is_admin
+        }
+        visitors_collection.insert_one(log_entry)
+        print("Visitor logged:", log_entry)
+    except Exception as e:
+        print("Could not fetch/store location:", e)
 
 @app.route("/", methods=["GET"])
 def index():
-    # This route serves the index.html file
     return render_template("index.html")
 
 @app.route("/api/merge", methods=["POST"])
 def merge_pdfs():
-    # This route handles the POST request from the frontend to merge PDFs
     files = request.files.getlist("pdfs")
     if len(files) < 2:
         return "Please upload at least two PDFs", 400
