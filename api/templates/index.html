@@ -23,12 +23,12 @@
     }
 
     .container {
-      /* Reverted to solid white background */
       background: #ffffff;
       padding: 40px 30px;
       border-radius: 20px;
       box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-      width: 550px; /* Increased width for more space */
+      /* --- THIS IS THE CHANGED LINE --- */
+      width: 650px;
       max-width: 90%;
       text-align: center;
       transition: transform 0.3s, box-shadow 0.3s;
@@ -47,44 +47,38 @@
       font-size: 1.8rem;
     }
 
-    /* --- MODIFIED STYLES for the tool switcher --- */
     .tool-switcher {
       display: flex;
-      position: relative; /* Crucial for positioning the glider */
-      background: #2c3e50; /* Dark background */
+      position: relative;
+      background: #2c3e50;
       border-radius: 12px;
       overflow: hidden;
       margin-bottom: 25px;
     }
 
-    /* The gliding "glass" element */
     .tool-switcher::before {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
-      width: 33.33%; /* Adjusted for 3 buttons */
+      width: 33.33%;
       height: 100%;
-      /* REFINED Liquid Glass Effect */
       background: linear-gradient(
         135deg,
         rgba(255, 255, 255, 0.4),
         rgba(255, 255, 255, 0.2)
       );
       backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.5); /* More visible border */
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Deeper shadow for depth */
-      /* --- */
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
       border-radius: 11px;
       transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       z-index: 1;
     }
 
-    /* New class to move the glider to the right */
     .tool-switcher.html-active::before {
       transform: translateX(100%);
     }
-    /* New class for the third button */
     .tool-switcher.compress-active::before {
       transform: translateX(200%);
     }
@@ -93,7 +87,7 @@
       flex: 1;
       padding: 12px;
       background: transparent;
-      color: #bdc3c7; /* Lighter inactive text for dark bg */
+      color: #bdc3c7;
       border: none;
       cursor: pointer;
       font-size: 0.9rem;
@@ -106,18 +100,12 @@
       letter-spacing: 1px;
     }
 
-    /* REMOVED the border between buttons */
-    /* .tool-switcher button:not(:last-child) {
-      border-right: 1px solid #ddd;
-    } */
-
     .tool-switcher button.active {
-      color: #ffffff; /* Bolder active text */
+      color: #ffffff;
     }
 
-    /* Styles for the letter animation */
     .tool-switcher button span {
-      display: inline-block; /* Allows transform */
+      display: inline-block;
       transition: transform 0.2s ease-out;
     }
 
@@ -129,7 +117,6 @@
       display: none;
     }
 
-    /* --- NEW STYLES for the tool area --- */
     .tool-area-wrapper {
       background: #f8f9fa;
       border: 1px solid #e9ecef;
@@ -137,9 +124,7 @@
       padding: 25px;
       margin-top: 25px;
     }
-    /* --- END MODIFIED STYLES --- */
 
-    /* --- NEW: Styles for the Coming Soon message --- */
     #compress-tool h3 {
       font-size: 1.5rem;
       color: #333;
@@ -150,11 +135,9 @@
       margin-top: 10px;
       line-height: 1.5;
     }
-    /* --- END NEW STYLES --- */
 
     input[type="file"] {
       display: block;
-      /* margin removed, padding on parent handles spacing */
       padding: 30px 20px;
       border: 2px dashed #bbb;
       border-radius: 12px;
@@ -179,12 +162,10 @@
       padding: 10px;
       font-family: monospace;
       font-size: 0.9rem;
-      /* margin removed */
     }
 
-    /* --- MODIFIED: Target only action buttons --- */
     .tool-content button {
-      margin-top: 25px; /* Spacing from input/textarea */
+      margin-top: 25px;
       padding: 12px 25px;
       width: 100%;
       background: linear-gradient(90deg, #6a11cb, #2575fc);
@@ -203,7 +184,7 @@
     }
 
     #toggle-offline {
-      margin-top: 20px; /* Kept original margin */
+      margin-top: 20px;
       display: none;
       background: #ff416c;
     }
@@ -244,7 +225,6 @@
       <button id="show-compress-btn">PDF Compression</button>
     </div>
 
-    <!-- NEW Wrapper for the tool content -->
     <div class="tool-area-wrapper">
       <div id="merge-tool" class="tool-content">
         <input type="file" id="pdfs" multiple accept="application/pdf" />
@@ -258,7 +238,6 @@
         <footer>Enter your HTML code in the box above to convert it to a PDF.</footer>
       </div>
 
-      <!-- NEW "Coming Soon" Panel -->
       <div id="compress-tool" class="tool-content hidden">
         <h3>Coming Soon!</h3>
         <p>We're working hard to bring you a powerful PDF compression tool. Stay tuned!</p>
@@ -276,7 +255,6 @@
   </div>
 
   <script>
-    // --- TOOL SWITCHER LOGIC ---
     const toolSwitcher = document.querySelector('.tool-switcher');
     const showMergeBtn = document.getElementById('show-merge-btn');
     const showHtmlBtn = document.getElementById('show-html-btn');
@@ -285,9 +263,7 @@
     const htmlTool = document.getElementById('html-tool');
     const compressTool = document.getElementById('compress-tool');
 
-    // --- NEW: LETTER ANIMATION LOGIC ---
     function wrapLetters(button) {
-      // Wrap each letter in a span, handling spaces correctly
       button.innerHTML = button.textContent.trim().split('').map(letter => `<span>${letter === ' ' ? '&nbsp;' : letter}</span>`).join('');
     }
 
@@ -296,7 +272,7 @@
       letters.forEach((letter, index) => {
         setTimeout(() => {
           letter.classList.add('enlarge');
-        }, index * 50); // Stagger the animation
+        }, index * 50);
       });
     }
 
@@ -307,16 +283,13 @@
       });
     }
 
-    // Prepare buttons for animation
     wrapLetters(showMergeBtn);
     wrapLetters(showHtmlBtn);
     wrapLetters(showCompressBtn);
 
-    // Animate the initially active button
     animateLetters(showMergeBtn);
 
 
-    // --- EVENT LISTENERS ---
     showMergeBtn.addEventListener('click', () => {
       mergeTool.classList.remove('hidden');
       htmlTool.classList.add('hidden');
@@ -326,10 +299,9 @@
       showHtmlBtn.classList.remove('active');
       showCompressBtn.classList.remove('active');
 
-      toolSwitcher.classList.remove('html-active'); // Move glider to the left
+      toolSwitcher.classList.remove('html-active');
       toolSwitcher.classList.remove('compress-active');
 
-      // Trigger animations
       animateLetters(showMergeBtn);
       resetLetters(showHtmlBtn);
       resetLetters(showCompressBtn);
@@ -344,10 +316,9 @@
       showMergeBtn.classList.remove('active');
       showCompressBtn.classList.remove('active');
 
-      toolSwitcher.classList.add('html-active'); // Move glider to the right
+      toolSwitcher.classList.add('html-active');
       toolSwitcher.classList.remove('compress-active');
 
-      // Trigger animations
       animateLetters(showHtmlBtn);
       resetLetters(showMergeBtn);
       resetLetters(showCompressBtn);
@@ -365,13 +336,11 @@
       toolSwitcher.classList.add('compress-active');
       toolSwitcher.classList.remove('html-active');
 
-      // Trigger animations
       animateLetters(showCompressBtn);
       resetLetters(showMergeBtn);
       resetLetters(showHtmlBtn);
     });
 
-    // --- PDF MERGE FUNCTION ---
     async function upload() {
       const files = document.getElementById("pdfs").files;
       if (files.length < 2) {
@@ -429,7 +398,6 @@
       }
     }
 
-    // --- HTML TO PDF FUNCTION ---
     async function convertHtml() {
         const htmlContent = document.getElementById("html_content").value;
         if (!htmlContent.trim()) {
@@ -490,7 +458,6 @@
         }
     }
 
-    // --- ADMIN CHECK FUNCTION ---
     async function checkAdmin() {
       try {
         const res = await fetch("/api/check_admin");
@@ -518,11 +485,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
