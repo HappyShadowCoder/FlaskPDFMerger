@@ -27,7 +27,6 @@
       padding: 40px 30px;
       border-radius: 20px;
       box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-      /* --- THIS IS THE CHANGED LINE --- */
       width: 650px;
       max-width: 90%;
       text-align: center;
@@ -153,17 +152,6 @@
       background: #f0f8ff;
     }
 
-    textarea {
-      width: 100%;
-      height: 200px;
-      box-sizing: border-box;
-      border: 2px solid #ddd;
-      border-radius: 12px;
-      padding: 10px;
-      font-family: monospace;
-      font-size: 0.9rem;
-    }
-
     .tool-content button {
       margin-top: 25px;
       padding: 12px 25px;
@@ -232,12 +220,14 @@
         <footer>Hold Command (Mac) or Ctrl (Windows) to select multiple files</footer>
       </div>
 
+      <!-- UPDATED HTML to PDF Panel -->
       <div id="html-tool" class="tool-content hidden">
-        <textarea id="html_content" placeholder="Paste your HTML code here..."></textarea>
-        <button onclick="convertHtml()">Convert to PDF</button>
-        <footer>Enter your HTML code in the box above to convert it to a PDF.</footer>
+        <input type="file" id="html_file" accept=".html" />
+        <button onclick="convertHtmlFile()">Convert HTML File to PDF</button>
+        <footer>Upload any HTML file, including those exported from Jupyter Notebook.</footer>
       </div>
 
+      <!-- REVERTED PDF Compression Panel -->
       <div id="compress-tool" class="tool-content hidden">
         <h3>Coming Soon!</h3>
         <p>We're working hard to bring you a powerful PDF compression tool. Stay tuned!</p>
@@ -288,7 +278,6 @@
     wrapLetters(showCompressBtn);
 
     animateLetters(showMergeBtn);
-
 
     showMergeBtn.addEventListener('click', () => {
       mergeTool.classList.remove('hidden');
@@ -398,11 +387,12 @@
       }
     }
 
-    async function convertHtml() {
-        const htmlContent = document.getElementById("html_content").value;
-        if (!htmlContent.trim()) {
+    // UPDATED HTML file conversion function
+    async function convertHtmlFile() {
+        const fileInput = document.getElementById("html_file");
+        if (fileInput.files.length === 0) {
             Toastify({
-                text: "⚠️ Please enter some HTML content",
+                text: "⚠️ Please select an HTML file to upload",
                 duration: 3000,
                 gravity: "top",
                 position: "center",
@@ -412,7 +402,7 @@
         }
 
         const loadingToast = Toastify({
-            text: "⏳ Converting to PDF... please wait",
+            text: "⏳ Converting file... please wait",
             duration: -1,
             gravity: "top",
             position: "center",
@@ -422,19 +412,22 @@
 
         try {
             const formData = new FormData();
-            formData.append("html_content", htmlContent);
+            formData.append("html_file", fileInput.files[0]);
 
-            const response = await fetch("/api/html-to-pdf", {
+            const response = await fetch("/api/file-to-pdf", {
                 method: "POST",
                 body: formData,
             });
 
-            if (!response.ok) throw new Error("Server error during PDF conversion");
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.error || "Server error during conversion");
+            }
 
             const blob = await response.blob();
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
-            link.download = "converted.pdf";
+            link.download = fileInput.files[0].name.replace('.html', '.pdf');
             link.click();
             URL.revokeObjectURL(link.href);
 
@@ -450,7 +443,7 @@
             loadingToast.hideToast();
             Toastify({
                 text: "❌ " + error.message,
-                duration: 4000,
+                duration: 5000,
                 gravity: "top",
                 position: "right",
                 style: { background: "linear-gradient(to right, #ff416c, #ff4b2b)" },
@@ -485,3 +478,4 @@
   </script>
 </body>
 </html>
+
