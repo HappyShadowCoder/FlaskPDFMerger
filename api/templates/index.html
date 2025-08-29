@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PDF Merger</title>
+  <title>PDF ToolKit</title>
   <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
@@ -23,11 +23,12 @@
     }
 
     .container {
+      /* Reverted to solid white background */
       background: #ffffff;
       padding: 40px 30px;
       border-radius: 20px;
       box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-      width: 400px;
+      width: 550px; /* Increased width for more space */
       max-width: 90%;
       text-align: center;
       transition: transform 0.3s, box-shadow 0.3s;
@@ -46,9 +47,114 @@
       font-size: 1.8rem;
     }
 
+    /* --- MODIFIED STYLES for the tool switcher --- */
+    .tool-switcher {
+      display: flex;
+      position: relative; /* Crucial for positioning the glider */
+      background: #2c3e50; /* Dark background */
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 25px;
+    }
+
+    /* The gliding "glass" element */
+    .tool-switcher::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 33.33%; /* Adjusted for 3 buttons */
+      height: 100%;
+      /* REFINED Liquid Glass Effect */
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.4),
+        rgba(255, 255, 255, 0.2)
+      );
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.5); /* More visible border */
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Deeper shadow for depth */
+      /* --- */
+      border-radius: 11px;
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      z-index: 1;
+    }
+
+    /* New class to move the glider to the right */
+    .tool-switcher.html-active::before {
+      transform: translateX(100%);
+    }
+    /* New class for the third button */
+    .tool-switcher.compress-active::before {
+      transform: translateX(200%);
+    }
+
+    .tool-switcher button {
+      flex: 1;
+      padding: 12px;
+      background: transparent;
+      color: #bdc3c7; /* Lighter inactive text for dark bg */
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: bold;
+      transition: color 0.4s ease-out;
+      margin: 0;
+      border-radius: 0;
+      position: relative;
+      z-index: 2;
+      letter-spacing: 1px;
+    }
+
+    /* REMOVED the border between buttons */
+    /* .tool-switcher button:not(:last-child) {
+      border-right: 1px solid #ddd;
+    } */
+
+    .tool-switcher button.active {
+      color: #ffffff; /* Bolder active text */
+    }
+
+    /* Styles for the letter animation */
+    .tool-switcher button span {
+      display: inline-block; /* Allows transform */
+      transition: transform 0.2s ease-out;
+    }
+
+    .tool-switcher button span.enlarge {
+      transform: scale(1.3);
+    }
+
+    .tool-content.hidden {
+      display: none;
+    }
+
+    /* --- NEW STYLES for the tool area --- */
+    .tool-area-wrapper {
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 12px;
+      padding: 25px;
+      margin-top: 25px;
+    }
+    /* --- END MODIFIED STYLES --- */
+
+    /* --- NEW: Styles for the Coming Soon message --- */
+    #compress-tool h3 {
+      font-size: 1.5rem;
+      color: #333;
+      margin-top: 20px;
+    }
+    #compress-tool p {
+      color: #777;
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+    /* --- END NEW STYLES --- */
+
     input[type="file"] {
       display: block;
-      margin: 20px auto;
+      /* margin removed, padding on parent handles spacing */
       padding: 30px 20px;
       border: 2px dashed #bbb;
       border-radius: 12px;
@@ -64,8 +170,21 @@
       background: #f0f8ff;
     }
 
-    button {
-      margin-top: 20px;
+    textarea {
+      width: 100%;
+      height: 200px;
+      box-sizing: border-box;
+      border: 2px solid #ddd;
+      border-radius: 12px;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      /* margin removed */
+    }
+
+    /* --- MODIFIED: Target only action buttons --- */
+    .tool-content button {
+      margin-top: 25px; /* Spacing from input/textarea */
       padding: 12px 25px;
       width: 100%;
       background: linear-gradient(90deg, #6a11cb, #2575fc);
@@ -78,18 +197,19 @@
       transition: transform 0.2s, box-shadow 0.2s;
     }
 
-    button:hover {
+    .tool-content button:hover {
       transform: translateY(-3px);
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     }
 
     #toggle-offline {
+      margin-top: 20px; /* Kept original margin */
       display: none;
       background: #ff416c;
     }
 
-    footer {
-      margin-top: 15px;
+    .tool-content footer {
+      margin-top: 20px;
       font-size: 12px;
       color: #777;
     }
@@ -107,7 +227,6 @@
       align-items: center;
       gap: 10px;
     }
-
     .info-footer a {
       color: #fff;
       text-decoration: underline;
@@ -117,11 +236,36 @@
 </head>
 <body>
   <div class="container">
-    <h2>Merge PDFs</h2>
-    <input type="file" id="pdfs" multiple accept="application/pdf" />
-    <button onclick="upload()">Merge</button>
+    <h2>PDF ToolKit 🛠️</h2>
+
+    <div class="tool-switcher">
+      <button id="show-merge-btn" class="active">PDF Merge</button>
+      <button id="show-html-btn">HTML to PDF</button>
+      <button id="show-compress-btn">PDF Compression</button>
+    </div>
+
+    <!-- NEW Wrapper for the tool content -->
+    <div class="tool-area-wrapper">
+      <div id="merge-tool" class="tool-content">
+        <input type="file" id="pdfs" multiple accept="application/pdf" />
+        <button onclick="upload()">Merge PDFs</button>
+        <footer>Hold Command (Mac) or Ctrl (Windows) to select multiple files</footer>
+      </div>
+
+      <div id="html-tool" class="tool-content hidden">
+        <textarea id="html_content" placeholder="Paste your HTML code here..."></textarea>
+        <button onclick="convertHtml()">Convert to PDF</button>
+        <footer>Enter your HTML code in the box above to convert it to a PDF.</footer>
+      </div>
+
+      <!-- NEW "Coming Soon" Panel -->
+      <div id="compress-tool" class="tool-content hidden">
+        <h3>Coming Soon!</h3>
+        <p>We're working hard to bring you a powerful PDF compression tool. Stay tuned!</p>
+      </div>
+    </div>
+
     <button id="toggle-offline">Toggle Offline Mode</button>
-    <footer>Hold Command (Mac) or Ctrl (Windows) to select multiple files</footer>
   </div>
 
   <div class="info-footer">
@@ -132,6 +276,102 @@
   </div>
 
   <script>
+    // --- TOOL SWITCHER LOGIC ---
+    const toolSwitcher = document.querySelector('.tool-switcher');
+    const showMergeBtn = document.getElementById('show-merge-btn');
+    const showHtmlBtn = document.getElementById('show-html-btn');
+    const showCompressBtn = document.getElementById('show-compress-btn');
+    const mergeTool = document.getElementById('merge-tool');
+    const htmlTool = document.getElementById('html-tool');
+    const compressTool = document.getElementById('compress-tool');
+
+    // --- NEW: LETTER ANIMATION LOGIC ---
+    function wrapLetters(button) {
+      // Wrap each letter in a span, handling spaces correctly
+      button.innerHTML = button.textContent.trim().split('').map(letter => `<span>${letter === ' ' ? '&nbsp;' : letter}</span>`).join('');
+    }
+
+    function animateLetters(buttonToShow) {
+      const letters = buttonToShow.querySelectorAll('span');
+      letters.forEach((letter, index) => {
+        setTimeout(() => {
+          letter.classList.add('enlarge');
+        }, index * 50); // Stagger the animation
+      });
+    }
+
+    function resetLetters(buttonToHide) {
+      const letters = buttonToHide.querySelectorAll('span');
+      letters.forEach(letter => {
+        letter.classList.remove('enlarge');
+      });
+    }
+
+    // Prepare buttons for animation
+    wrapLetters(showMergeBtn);
+    wrapLetters(showHtmlBtn);
+    wrapLetters(showCompressBtn);
+
+    // Animate the initially active button
+    animateLetters(showMergeBtn);
+
+
+    // --- EVENT LISTENERS ---
+    showMergeBtn.addEventListener('click', () => {
+      mergeTool.classList.remove('hidden');
+      htmlTool.classList.add('hidden');
+      compressTool.classList.add('hidden');
+
+      showMergeBtn.classList.add('active');
+      showHtmlBtn.classList.remove('active');
+      showCompressBtn.classList.remove('active');
+
+      toolSwitcher.classList.remove('html-active'); // Move glider to the left
+      toolSwitcher.classList.remove('compress-active');
+
+      // Trigger animations
+      animateLetters(showMergeBtn);
+      resetLetters(showHtmlBtn);
+      resetLetters(showCompressBtn);
+    });
+
+    showHtmlBtn.addEventListener('click', () => {
+      htmlTool.classList.remove('hidden');
+      mergeTool.classList.add('hidden');
+      compressTool.classList.add('hidden');
+
+      showHtmlBtn.classList.add('active');
+      showMergeBtn.classList.remove('active');
+      showCompressBtn.classList.remove('active');
+
+      toolSwitcher.classList.add('html-active'); // Move glider to the right
+      toolSwitcher.classList.remove('compress-active');
+
+      // Trigger animations
+      animateLetters(showHtmlBtn);
+      resetLetters(showMergeBtn);
+      resetLetters(showCompressBtn);
+    });
+
+    showCompressBtn.addEventListener('click', () => {
+      compressTool.classList.remove('hidden');
+      mergeTool.classList.add('hidden');
+      htmlTool.classList.add('hidden');
+
+      showCompressBtn.classList.add('active');
+      showMergeBtn.classList.remove('active');
+      showHtmlBtn.classList.remove('active');
+
+      toolSwitcher.classList.add('compress-active');
+      toolSwitcher.classList.remove('html-active');
+
+      // Trigger animations
+      animateLetters(showCompressBtn);
+      resetLetters(showMergeBtn);
+      resetLetters(showHtmlBtn);
+    });
+
+    // --- PDF MERGE FUNCTION ---
     async function upload() {
       const files = document.getElementById("pdfs").files;
       if (files.length < 2) {
@@ -159,22 +399,17 @@
         for (let i = 0; i < files.length; i++) {
           formData.append("pdfs", files[i]);
         }
-
         const response = await fetch("/api/merge", {
           method: "POST",
           body: formData,
         });
-
         if (!response.ok) throw new Error("Server error while merging PDFs");
-
         const blob = await response.blob();
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
         link.download = "merged.pdf";
         link.click();
-
         loadingToast.hideToast();
-
         Toastify({
           text: "✅ Merging completed! Download started.",
           duration: 3000,
@@ -194,6 +429,68 @@
       }
     }
 
+    // --- HTML TO PDF FUNCTION ---
+    async function convertHtml() {
+        const htmlContent = document.getElementById("html_content").value;
+        if (!htmlContent.trim()) {
+            Toastify({
+                text: "⚠️ Please enter some HTML content",
+                duration: 3000,
+                gravity: "top",
+                position: "center",
+                style: { background: "linear-gradient(to right, #ff5f6d, #ffc371)" },
+            }).showToast();
+            return;
+        }
+
+        const loadingToast = Toastify({
+            text: "⏳ Converting to PDF... please wait",
+            duration: -1,
+            gravity: "top",
+            position: "center",
+            style: { background: "linear-gradient(to right, #00b09b, #96c93d)" },
+        });
+        loadingToast.showToast();
+
+        try {
+            const formData = new FormData();
+            formData.append("html_content", htmlContent);
+
+            const response = await fetch("/api/html-to-pdf", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!response.ok) throw new Error("Server error during PDF conversion");
+
+            const blob = await response.blob();
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "converted.pdf";
+            link.click();
+            URL.revokeObjectURL(link.href);
+
+            loadingToast.hideToast();
+            Toastify({
+                text: "✅ Conversion complete! Download started.",
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                style: { background: "linear-gradient(to right, #56ab2f, #a8e063)" },
+            }).showToast();
+        } catch (error) {
+            loadingToast.hideToast();
+            Toastify({
+                text: "❌ " + error.message,
+                duration: 4000,
+                gravity: "top",
+                position: "right",
+                style: { background: "linear-gradient(to right, #ff416c, #ff4b2b)" },
+            }).showToast();
+        }
+    }
+
+    // --- ADMIN CHECK FUNCTION ---
     async function checkAdmin() {
       try {
         const res = await fetch("/api/check_admin");
@@ -217,8 +514,15 @@
         console.error(err);
       }
     }
-
     checkAdmin();
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
