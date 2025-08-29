@@ -1,6 +1,6 @@
-# Flask PDF Merger
+# Flask PDF ToolKit
 
-A lightweight and user-friendly web application to seamlessly merge multiple PDF files into a single document. This project provides a clean and intuitive interface for PDF consolidation, making it perfect for personal or professional use.
+A lightweight and user-friendly web application to seamlessly merge multiple PDF files and convert HTML to PDF. This project provides a clean and intuitive interface, making it perfect for personal or professional use.
 ***
 
 ## 🚀 Live Deployment
@@ -21,6 +21,7 @@ This Flask PDF Merger is deployed on **Render** and accessible publicly. You can
 ### ✨ Features
 
 - **Merge Multiple PDFs:** Combine several PDF files into one with a single click.
+- **HTML to PDF Conversion**: Convert any HTML file, including complex Jupyter Notebook exports, into a high-quality PDF.
 - **Web Interface:** Upload PDFs directly through your browser without installing additional software.
 - **Fast & Lightweight:** Built to be quick and efficient, even with multiple PDFs.
 - **Download Merged PDF:** Receive the merged PDF instantly after processing.
@@ -34,7 +35,7 @@ This Flask PDF Merger is deployed on **Render** and accessible publicly. You can
 This project is built with the following technologies:
 
 - **Backend:** Python, Flask
-- **PDF Processing:** PyPDF2
+- **PDF Processing:** PyPDF2 (for merging), WeasyPrint (for HTML to PDF)
 - **Frontend:** HTML, CSS (Jinja2 templates)
 - **Server:** WSGI / Flask development server
 
@@ -42,11 +43,11 @@ This project is built with the following technologies:
 
 ### 🚀 How It Works
 
-This is a web application where users can upload multiple PDFs, which are then merged into a single file using **PyPDF2**:
+This is a multi-functional web application:
 
-- **Upload PDFs:** Users select multiple PDF files through the web interface.
-- **Merge PDFs:** The backend uses `PdfMerger` from PyPDF2 to combine the uploaded files in order.
-- **Download Output:** The merged PDF is returned as a downloadable file directly from the server.
+PDF Merging: Users upload multiple PDFs. The backend uses PdfMerger from PyPDF2 to combine the files, which are then returned as a download.
+
+HTML to PDF Conversion: Users upload an HTML file. The server injects necessary CSS to correctly style Jupyter Notebook exports, then uses WeasyPrint to render a PDF.
 
 ***
 
@@ -92,11 +93,16 @@ Potential improvements for the project include:
 ***
 
 ### 📜 Version
-**v1.0.0** 
+**v3.0.0**
 
-Initial release with full PDF merging functionality and web interface.
+Added HTML to PDF conversion feature using WeasyPrint.
 
 **v2.0.0**  
 
 Major Security and Reliability Update 🔒
 This version introduces a robust IP address handling fix for reverse proxies and the addition of a dedicated admin check API endpoint to ensure secure and reliable access to administrative features.
+
+**v1.0.0** 
+
+Initial release with full PDF merging functionality and web interface.
+
