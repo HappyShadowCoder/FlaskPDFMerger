@@ -1,0 +1,96 @@
+/*
+This CSS file contains the "classic" Jupyter theme styles.
+It defines all the --jp- variable colors and styles needed to
+properly render an exported Jupyter Notebook HTML file.
+*/
+
+:root {
+  --jp-code-font-size: 13px;
+  --jp-code-line-height: 1.3077; /* 17px for 13px base */
+  --jp-cell-editor-background: #f7f7f7;
+  --jp-mirror-editor-variable-color: #000;
+  --jp-mirror-editor-comment-color: #408080;
+  --jp-mirror-editor-error-color: #f00;
+  --jp-mirror-editor-keyword-color: #008000;
+  --jp-mirror-editor-operator-color: #a2f;
+  --jp-mirror-editor-punctuation-color: #05a;
+  --jp-mirror-editor-number-color: #080;
+  --jp-mirror-editor-string-color: #ba2121;
+  --jp-cell-editor-active-background: #eee;
+  --jp-ui-font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  --jp-content-font-color1: #333;
+}
+
+pre {
+  line-height: 125%;
+  font-family: var(--jp-code-font-family-default, monospace);
+  font-size: var(--jp-code-font-size);
+  color: var(--jp-mirror-editor-variable-color);
+}
+.highlight {
+  background: var(--jp-cell-editor-background);
+}
+.highlight .hll {
+  background-color: var(--jp-cell-editor-active-background);
+}
+.highlight .c {
+  color: var(--jp-mirror-editor-comment-color);
+  font-style: italic;
+} /* Comment */
+.highlight .err {
+  color: var(--jp-mirror-editor-error-color);
+} /* Error */
+.highlight .k {
+  color: var(--jp-mirror-editor-keyword-color);
+  font-weight: bold;
+} /* Keyword */
+.highlight .kn {
+  color: var(--jp-mirror-editor-keyword-color);
+  font-weight: bold;
+} /* Keyword.Namespace */
+.highlight .o {
+  color: var(--jp-mirror-editor-operator-color);
+  font-weight: bold;
+} /* Operator */
+.highlight .p {
+  color: var(--jp-mirror-editor-punctuation-color);
+} /* Punctuation */
+.highlight .kn {
+  color: var(--jp-mirror-editor-keyword-color);
+  font-weight: bold;
+} /* Keyword.Namespace */
+.highlight .nn {
+  color: var(--jp-mirror-editor-variable-color);
+} /* Name.Namespace */
+.highlight .n {
+  color: var(--jp-mirror-editor-variable-color);
+}
+.highlight .s2 {
+  color: var(--jp-mirror-editor-string-color);
+} /* String.Double */
+.highlight .c1 {
+  color: var(--jp-mirror-editor-comment-color);
+  font-style: italic;
+} /* Comment.Single */
+.highlight .mi {
+  color: var(--jp-mirror-editor-number-color);
+} /* Number.Integer */
+.highlight .mf {
+  color: var(--jp-mirror-editor-number-color);
+} /* Number.Float */
+
+/* Basic table styling */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1em;
+}
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+th {
+  background-color: #f2f2f2;
+}
