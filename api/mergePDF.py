@@ -6,10 +6,10 @@ import requests
 import io
 import os
 from werkzeug.middleware.proxy_fix import ProxyFix
-from html2pdf import convert_html_to_pdf
+from html2pdf import html_converter_bp
 
 app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), "templates"))
-app.register_blueprint(convert_html_to_pdf)
+app.register_blueprint(html_converter_bp)
 
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1)
 
